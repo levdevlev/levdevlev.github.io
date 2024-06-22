@@ -1,0 +1,136 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #1a1a1a;
+    color: #dddddd;
+    overflow: hidden;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    background-image: url("https://www.transparenttextures.com/patterns/black-lozenge.png");
+    z-index: -1;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+.logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 200px;
+}
+
+.navbar-nav .nav-link {
+    margin: 0 10px;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+/* Button Styles */
+.button-57 {
+  position: relative;
+  overflow: hidden;
+  border: 0.5px solid #dadada25;
+  color: #d8d8d8;
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 18px 50px;
+  text-decoration: none;
+  cursor: pointer;
+  background: #1f1f1f41;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.button-57 span:first-child {
+  position: relative;
+  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+.button-57 span:last-child {
+  color: #1a1a1a;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 100;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(225%) translateX(-50%);
+  height: 20px;
+  line-height: 20px;
+}
+
+.button-57:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #215aa9;
+  transform-origin: bottom center;
+  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  transform: skewY(9.3deg) scaleY(0);
+  z-index: 50;
+}
+
+.button-57:hover:after {
+  transform-origin: bottom center;
+  transform: skewY(9.3deg) scaleY(2);
+}
+
+.button-57:hover span:last-child {
+  transform: translateX(-50%) translateY(-100%);
+  opacity: 1;
+  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+
+.button-57:hover {
+  background-color: #1a1a1a;
+  color: #dddddd;
+}
+
+/* Specific hover effect for XYZ Roleplay button */
+.xyz-roleplay-button:after {
+  background: #c9c9c9; /* Grey color for XYZ Roleplay */
+}
+
+.xyz-roleplay-button:hover {
+  color: #dddddd;
+}
+
+/* Specific hover effect for Discord button */
+.discord-button:after {
+  background-color: #7289da; /* Green color for Discord */
+}
+
+.discord-button:hover {
+  color: #dddddd;
+}
+
+/* Specific styles for Store button */
+.navbar-nav .nav-item:nth-child(3) .button-57 span:last-child {
+  color: #dddddd; /* Change "View Store" text color to white */
+}
+
+/* Specific styles for Visit My Discord button */
+.navbar-nav .nav-item:nth-child(1) .button-57 span:last-child {
+  color: #dddddd; /* Change "Visit My Discord" text color to #dddddd */
+}
