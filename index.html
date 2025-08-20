@@ -1,55 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>levlevlev</title>
-    <!-- logo  -->
     <link rel="icon" href="logo.png" type="image/x-icon">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</head>
+    <meta name="description" content="Minimal portfolio landing to redirect to Store and Discord.">
+    <meta name="theme-color" content="#111111">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    html {
-        scroll-behavior: smooth;
+        :root {
+            --bg: #0a0a0a;
+            --fg: #e5e5e5;
+            --muted: #a1a1aa;
+            --accent: #60a5fa;
+            --accent-strong: #3b82f6;
+            --ring: rgba(96,165,250,0.35);
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+            color: var(--fg);
+            background: radial-gradient(1400px 600px at 50% -15%, rgba(59,130,246,0.14), rgba(59,130,246,0) 60%),
+                        linear-gradient(180deg, #0b0b0b 0%, #050505 100%);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+              radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1.3px),
+              linear-gradient(to right, rgba(255,255,255,0.055) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px);
+            background-size: 20px 20px, 56px 56px, 56px 56px;
+            mask-image: radial-gradient(800px 400px at 50% 0%, rgba(0,0,0,0.75), transparent 70%);
+            -webkit-mask-image: radial-gradient(800px 400px at 50% 0%, rgba(0,0,0,0.75), transparent 70%);
+        }
+        .page { min-height: 100svh; display: grid; place-items: center; padding: 36px; }
+        .card {
+            width: 100%;
+            max-width: 1200px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .brand { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .brand img { width: 84px; height: 84px; border-radius: 12px; }
+        .hero { margin-top: 16px; }
+        .ring {
+            position: relative;
+            display: inline-grid;
+            place-items: center;
+            width: 112px; height: 112px;
+            border-radius: 999px;
+        }
+        .ring::before {
+            content: "";
+            position: absolute; inset: -1px;
+            border-radius: inherit;
+            background: conic-gradient(from 210deg, var(--accent), transparent 45%, var(--accent) 55%, transparent 85%);
+            filter: blur(14px);
+            opacity: 0.65;
+        }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; justify-content: center; }
+        .btn { appearance: none; border: 0; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 12px; border-radius: 14px; font-weight: 700; letter-spacing: -0.01em; transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease; font-size: 16px; }
+        .btn:active { transform: translateY(1px); }
+        .btn-primary { background: var(--accent-strong); color: white; padding: 16px 24px; box-shadow: 0 8px 24px rgba(59,130,246,0.35); }
+        .btn-primary:hover { background: var(--accent); box-shadow: 0 12px 30px rgba(96,165,250,0.4); }
+        .btn-ghost { background: transparent; color: var(--fg); padding: 16px 24px; border: 1px solid rgba(255,255,255,0.12); }
+        .btn-ghost:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.03); }
+        .gallery { margin-top: 24px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        @media (max-width: 860px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+        @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+        .tile { position: relative; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.03); aspect-ratio: 16/9; }
+        .slides { position: absolute; inset: 0; }
+        .slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; }
+        .slides img.active { opacity: 1; }
+        .tile-anchor { position: absolute; inset: 0; z-index: 1; }
+        .tile .label { position: absolute; left: 10px; bottom: 10px; padding: 8px 12px; font-size: 12px; color: #fff; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; pointer-events: none; backdrop-filter: blur(2px); z-index: 2; }
+        .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 40px; display: grid; place-items: center; color: #fff; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; opacity: 0; transition: opacity .2s ease, background .2s ease; cursor: pointer; user-select: none; z-index: 3; }
+        .nav:hover { background: rgba(0,0,0,0.35); }
+        .tile:hover .nav { opacity: 0.95; }
+        .nav.prev { left: 10px; }
+        .nav.next { right: 10px; }
+        @media (max-width: 420px) {
+            .card { padding: 24px; border-radius: 18px; }
+            .brand img { width: 72px; height: 72px; }
+            .ring { width: 96px; height: 96px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn, .btn-primary, .btn-ghost { transition: none; }
+            .ring::before { filter: none; opacity: 0.4; }
     }
 </style>
-
+</head>
 <body>
-    <div class="background"></div>
-    <div class="container text-center d-flex align-items-center justify-content-center min-vh-100">
-        <div>
-            <img src="logo.png" alt="My Logo" class="logo my-4">
-            <nav class="navbar navbar-expand-lg navbar-dark">
-                <div class="navbar-collapse justify-content-center">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://discord.gg/4m82gX2Zwn">
-                                <button class="button-57 discord-button" role="button"><span class="text"><i class="fas fa-home"></i> Discord</span><span>Visit My Discord</span></button>
-                            </a>
-                        </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="https://xyzroleplay.com/">
-                                <button class="button-57 xyz-roleplay-button" role="button"><span class="text"><i class="fas fa-user"></i> XYZ Roleplay</span><span>Join Our Community</span></button>
-                            </a>
-                        </li> -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://levlevlev.tebex.io/">
-                                <button class="button-57" role="button"><span class="text"><i class="fas fa-envelope"></i> Store</span><span>View Store</span></button>
-                            </a>
-                        </li>
-                    </ul>
+    <div class="bg-grid"></div>
+    <div class="page">
+        <main class="card">
+            <div class="brand">
+                <span class="ring"><img src="logo.png" alt="levlevlev"></span>
+            </div>
+            <section class="hero">
+                <div class="actions">
+                    <a class="btn btn-primary" href="https://levlevlev.tebex.io/" target="_blank" rel="noopener">Visit Store</a>
+                    <a class="btn btn-ghost" href="https://discord.gg/4m82gX2Zwn" target="_blank" rel="noopener">Join Discord</a>
                 </div>
-            </nav>
-        </div>
+            </section>
+            <section class="gallery" aria-label="Interiors">
+                <div class="grid">
+                    <figure class="tile" data-slides='["https://dunb17ur4ymx4.cloudfront.net/packages/images/e52a51f5b215ddf1671c5dbf59cc360a5b16f165.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/998a35ba4dab9c8652a8a0d2dd97bd5717601fd0.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/764bf3162bf803c0f51551f889b393810f8935a9.png"]'>
+                        <a class="tile-anchor" href="https://levlevlev.tebex.io/package/6383775" target="_blank" rel="noopener" aria-label="Open The Grain of Truth"></a>
+                        <div class="label">The Grain of Truth</div>
+                        <div class="slides"></div>
+                        <div class="nav prev" aria-label="Previous">‹</div>
+                        <div class="nav next" aria-label="Next">›</div>
+                    </figure>
+                    <figure class="tile" data-slides='["https://dunb17ur4ymx4.cloudfront.net/packages/images/e91fee09f6c1e9dc97bdda9ecc0750529589eea4.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/e8948f63187bad803541df389b9a5af817cbce4f.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/68aff14f6cfe6d50171b849600f692e84f247039.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/52694c32eb85681cc22d2cf72b49c9af44b3c257.png"]'>
+                        <a class="tile-anchor" href="https://levlevlev.tebex.io/package/6577823" target="_blank" rel="noopener" aria-label="Open Digital Den"></a>
+                        <div class="label">Digital Den</div>
+                        <div class="slides"></div>
+                        <div class="nav prev" aria-label="Previous">‹</div>
+                        <div class="nav next" aria-label="Next">›</div>
+                    </figure>
+                    <figure class="tile" data-slides='["https://dunb17ur4ymx4.cloudfront.net/packages/images/b312a8624455730cded55d85b22c2db9f599be54.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/57e802ceb1d027b768bdf8238cdfb597b8d6981e.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/df69311e661841f659b4d90c87e113e3041db6ad.png","https://dunb17ur4ymx4.cloudfront.net/wysiwyg/1431391/18b356a7c95dcea8106f155c9dc9dcea89fc6a2a.png"]'>
+                        <a class="tile-anchor" href="https://levlevlev.tebex.io/package/6279523" target="_blank" rel="noopener" aria-label="Open Marlowe Vineyard Cellar"></a>
+                        <div class="label">Marlowe Vineyard Cellar</div>
+                        <div class="slides"></div>
+                        <div class="nav prev" aria-label="Previous">‹</div>
+                        <div class="nav next" aria-label="Next">›</div>
+                    </figure>
+                </div>
+            </section>
+        </main>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        window.addEventListener('keydown', function(e){
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key.toLowerCase() === 's') window.open('https://levlevlev.tebex.io/','_blank');
+            if (e.key.toLowerCase() === 'd') window.open('https://discord.gg/4m82gX2Zwn','_blank');
+        });
+        // Initialize slideshows
+        (function(){
+            const tiles = Array.from(document.querySelectorAll('.tile[data-slides]'));
+            tiles.forEach(tile => {
+                const slides = JSON.parse(tile.getAttribute('data-slides'));
+                const container = tile.querySelector('.slides');
+                if (!slides || !container) return;
+                const imgs = slides.map((src, i) => {
+                    const img = new Image();
+                    img.src = src.startsWith('//') ? (location.protocol + src) : src;
+                    if (i === 0) img.classList.add('active');
+                    container.appendChild(img);
+                    return img;
+                });
+                let index = 0;
+                const prev = tile.querySelector('.nav.prev');
+                const next = tile.querySelector('.nav.next');
+                function show(i){
+                    imgs[index].classList.remove('active');
+                    index = (i + imgs.length) % imgs.length;
+                    imgs[index].classList.add('active');
+                }
+                let timer = setInterval(() => show(index + 1), 3000);
+                function reset(){ clearInterval(timer); timer = setInterval(() => show(index + 1), 3000); }
+                prev && prev.addEventListener('click', (e) => { e.preventDefault(); show(index - 1); reset(); });
+                next && next.addEventListener('click', (e) => { e.preventDefault(); show(index + 1); reset(); });
+                tile.addEventListener('mouseenter', () => clearInterval(timer));
+                tile.addEventListener('mouseleave', reset);
+            });
+        })();
+    </script>
 </body>
-
 </html>
+
